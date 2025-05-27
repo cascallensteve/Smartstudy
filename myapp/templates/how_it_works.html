@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How It Works | Smart Study Assistant with AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a3a8f, #3c6cd1, #1a3a8f);
+      background-size: 200% 200%;
+      animation: gradientBG 15s ease infinite;
+      color: white;
+      min-height: 100vh;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      text-decoration: none;
+    }
+    
+    .logo span {
+      color: #00aaff;
+      margin-left: 5px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.3s;
+    }
+    
+    .nav-links a:hover {
+      color: #00aaff;
+    }
+    
+    .active {
+      color: #00aaff !important;
+      font-weight: 600 !important;
+    }
+    
+    .hero {
+      padding: 80px 5%;
+      text-align: center;
+      position: relative;
+    }
+    
+    .pattern-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      z-index: -1;
+    }
+    
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      display: inline-block;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 5px;
+      background: #00aaff;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+    }
+    
+    p.description {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 30px auto;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+    
+    .process-header {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 2rem;
+      color: white;
+    }
+    
+    .process-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      position: relative;
+    }
+    
+    .process-timeline {
+      position: relative;
+      padding: 30px 0;
+    }
+    
+    .process-timeline:before {
+      content: '';
+      position: absolute;
+      width: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+      border-radius: 10px;
+    }
+    
+    .process-step {
+      padding: 10px 40px;
+      position: relative;
+      width: 50%;
+      box-sizing: border-box;
+      margin-bottom: 60px;
+    }
+    
+    .left {
+      left: 0;
+      text-align: right;
+    }
+    
+    .right {
+      left: 50%;
+      text-align: left;
+    }
+    
+    .process-step::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      background-color: #00aaff;
+      border-radius: 50%;
+      top: 20px;
+      z-index: 1;
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.7);
+    }
+    
+    .left::after {
+      right: -12.5px;
+    }
+    
+    .right::after {
+      left: -12.5px;
+    }
+    
+    .process-content {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .process-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .process-content h2 {
+      margin: 0;
+      color: #00aaff;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .process-content p {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .process-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(0, 170, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      color: #00aaff;
+      border: 2px solid rgba(0, 170, 255, 0.3);
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.3);
+    }
+    
+    .process-image {
+      width: 100%;
+      height: 180px;
+      background-position: center;
+      background-size: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+      transition: transform 0.3s;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .process-content:hover .process-image {
+      transform: scale(1.05);
+    }
+    
+    .animated-circle {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 170, 255, 0.2);
+      z-index: -1;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-20px) scale(1.2); opacity: 0.3; }
+      100% { transform: translateY(0) scale(1); opacity: 0.7; }
+    }
+    
+    .floating-circle {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 170, 255, 0.2) 0%, rgba(0, 170, 255, 0) 70%);
+      z-index: -1;
+    }
+    
+    .circle1 {
+      top: 20%;
+      left: 10%;
+      animation: float 8s infinite ease-in-out;
+    }
+    
+    .circle2 {
+      top: 60%;
+      right: 10%;
+      width: 200px;
+      height: 200px;
+      animation: float 10s infinite ease-in-out reverse;
+    }
+    
+    .circle3 {
+      bottom: 10%;
+      left: 30%;
+      width: 100px;
+      height: 100px;
+      animation: float 6s infinite ease-in-out 1s;
+    }
+    
+    .info-callout {
+      max-width: 800px;
+      margin: 80px auto 40px;
+      background: rgba(0, 170, 255, 0.1);
+      border-left: 5px solid #00aaff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .info-callout h3 {
+      color: #00aaff;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .info-callout p {
+      margin: 0;
+      line-height: 1.6;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      margin-top: 40px;
+      background: linear-gradient(45deg, #0077ff, #00aaff);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 5px 15px rgba(0, 170, 255, 0.4);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 170, 255, 0.6);
+    }
+    
+    footer {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px 5%;
+      text-align: center;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .footer-logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .footer-logo span {
+      color: #00aaff;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: #00aaff;
+    }
+    
+    .copyright {
+      margin-top: 20px;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 1000px) {
+      .process-timeline:before {
+        left: 40px;
+      }
+      
+      .process-step {
+        width: 100%;
+        padding-left: 80px;
+        padding-right: 20px;
+      }
+      
+      .left, .right {
+        left: 0;
+        text-align: left;
+      }
+      
+      .left::after, .right::after {
+        left: 27.5px;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .process-content h2 {
+        font-size: 1.5rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated floating elements -->
+  <div class="floating-circle circle1"></div>
+  <div class="floating-circle circle2"></div>
+  <div class="floating-circle circle3"></div>
+
+  <!-- Navigation bar -->
+  <nav class="navbar">
+    <a href="#" class="logo">SSAAI<span>Smart Study</span></a>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#" class="active">How It Works</a>
+      <a href="#">Features</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero section -->
+  <div class="hero">
+    <div class="pattern-bg"></div>
+    <h1>How It Works</h1>
+    <p class="description">
+      Smart Study Assistant with AI helps you learn smarter, not harder. Our AI-powered platform provides personalized learning tools that make studying more efficient and effective for students at all levels.
+    </p>
+  </div>
+
+  <!-- Process section -->
+  <h2 class="process-header">Our Smart Study Process</h2>
+  <div class="process-container">
+    <div class="process-timeline">
+      <!-- Step 1 -->
+      <div class="process-step left">
+        <div class="process-content">
+          <div class="process-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h2>1. Note Summarization</h2>
+          <p>Upload or paste your study materials, and our AI instantly creates concise summaries that highlight key concepts. Reduce hours of reading into minutes of focused review.</p>
+          <div class="process-image" style="background-image: url('/api/placeholder/600/300')"></div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="process-step right">
+        <div class="process-content">
+          <div class="process-icon">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <h2>2. AI Quiz Generation</h2>
+          <p>Enter any topic or upload notes, and the system automatically generates customized quizzes with multiple-choice questions to test your knowledge and reinforce learning.</p>
+          <div class="process-image" style="background-image: url('/api/placeholder/600/300')"></div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="process-step left">
+        <div class="process-content">
+          <div class="process-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h2>3. Homework Chatbot</h2>
+          <p>Stuck on a problem? Chat with our AI assistant that provides instant help with homework questions. The system stores your conversation history for easy reference during exam prep.</p>
+          <div class="process-image" style="background-image: url('/api/placeholder/600/300')"></div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="process-step right">
+        <div class="process-content">
+          <div class="process-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h2>4. Study Schedule Planner</h2>
+          <p>Input your subjects and available time, and our AI creates a personalized study schedule optimized for your learning goals and exam dates. Adjust on the fly as your needs change.</p>
+          <div class="process-image" style="background-image: url('/api/placeholder/600/300')"></div>
+        </div>
+      </div>
+      
+      <!-- Step 5 -->
+      <div class="process-step left">
+        <div class="process-content">
+          <div class="process-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h2>5. Track Your Progress</h2>
+          <p>Monitor your learning journey through an intuitive dashboard that displays your quiz scores, study hours, and completed topics. Set goals and watch your progress grow over time.</p>
+          <div class="process-image" style="background-image: url('/api/placeholder/600/300')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info callout -->
+  <div class="info-callout">
+    <h3>Powered by Advanced AI</h3>
+    <p>Our platform leverages state-of-the-art natural language processing to understand your educational needs and provide tailored assistance. Behind the scenes, we use OpenAI's technology with carefully engineered prompts to deliver the most relevant and accurate educational support.</p>
+  </div>
+
+  <!-- CTA section -->
+  <div style="text-align: center; padding: 20px;">
+    <a href="#" class="cta-button">Start Learning Smarter Today</a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">SSAAI<span>Smart Study</span></div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2025 Smart Study Assistant with AI. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Create animated circles
+    function createAnimatedCircles() {
+      const container = document.querySelector('.process-container');
+      
+      for (let i = 0; i < 10; i++) {
+        const circle = document.createElement('div');
+        circle.classList.add('animated-circle');
+        
+        // Random position
+        const posX = Math.floor(Math.random() * 100);
+        const posY = Math.floor(Math.random() * 100);
+        
+        circle.style.left = `${posX}%`;
+        circle.style.top = `${posY}%`;
+        
+        // Random size
+        const size = Math.floor(Math.random() * 50) + 20;
+        circle.style.width = `${size}px`;
+        circle.style.height = `${size}px`;
+        
+        // Random animation
+        const duration = (Math.random() * 10 + 5).toFixed(1);
+        const delay = (Math.random() * 5).toFixed(1);
+        
+        circle.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+        
+        container.appendChild(circle);
+      }
+    }
+    
+    // Execute when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      createAnimatedCircles();
+    });
+  </script>
+</body>
+</html>

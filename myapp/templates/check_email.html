@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Your Email</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo-container {
+            margin-bottom: 25px;
+        }
+        
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 25px;
+        }
+        
+        .email-highlight {
+            font-weight: 600;
+            color: #3498db;
+            padding: 5px 10px;
+            background-color: #f0f7ff;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .email-icon {
+            font-size: 64px;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        
+        .helper-text {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-home {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-home:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="/api/placeholder/180/60" alt="Company Logo" class="logo">
+        </div>
+        
+        <div class="email-icon">
+            ✉️
+        </div>
+        
+        <h2>Check your email</h2>
+        
+        <p>An activation link has been sent to:</p>
+        <div class="email-highlight">{{ email }}</div>
+        <p>Please verify your email to complete registration.</p>
+        
+        <p>The link will expire in 24 hours.</p>
+        
+        <a href="/" class="btn-home">Return to Home</a>
+        
+        <div class="helper-text">
+            <p>If you don't see the email in your inbox, please check your spam folder or click below to resend the activation email.</p>
+            <a href="#" onclick="resendEmail(); return false;">Resend activation email</a>
+        </div>
+    </div>
+    
+    <script>
+        function resendEmail() {
+            // This would be connected to your backend resend functionality
+            alert("Activation email has been resent. Please check your inbox.");
+        }
+    </script>
+</body>
+</html>

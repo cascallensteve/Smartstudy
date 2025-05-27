@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Q&A Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --success-color: #00b894;
+            --error-color: #d63031;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            margin-top: 1rem;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            font-weight: 500;
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 150px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        
+        textarea::placeholder {
+            color: #b2b2b2;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0 0.5rem 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background-color: #5a4bd4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        button.tertiary {
+            background-color: var(--accent-color);
+        }
+        
+        #result, #answer-result {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            border-left: 4px solid var(--primary-color);
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            min-height: 80px;
+        }
+        
+        #answer-result {
+            border-left-color: var(--accent-color);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: var(--error-color);
+            background-color: #ffebee;
+            border-left: 4px solid var(--error-color);
+        }
+        
+        .action-buttons {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            button {
+                width: 100%;
+                margin: 0.3rem 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gemini Q&A Generator</h1>
+        
+        <div class="tab-container">
+            <div class="tab active" onclick="switchTab('questions')">Generate Questions</div>
+            <div class="tab" onclick="switchTab('answers')">Generate Answers</div>
+        </div>
+        
+        <!-- Questions Tab -->
+        <div id="questions-tab" class="tab-content active">
+            <textarea id="user_input" rows="4" placeholder="Enter your text here to generate questions..."></textarea>
+            
+            <button onclick="generateQuestion()">Generate Questions</button>
+            <button class="secondary" onclick="copyToClipboard('result')" id="copy-question-btn" disabled>Copy Questions</button>
+            <button class="tertiary" onclick="downloadAsPDF('result', 'Generated_Questions')" id="download-question-btn" disabled>Download as PDF</button>
+            
+            <div class="loading" id="loading-questions">
+                <div class="spinner"></div>
+                <p>Generating your questions...</p>
+            </div>
+            
+            <h2>Generated Questions:</h2>
+            <div id="result">Your generated questions will appear here...</div>
+        </div>
+        
+        <!-- Answers Tab -->
+        <div id="answers-tab" class="tab-content">
+            <textarea id="answer_input" rows="4" placeholder="Enter your question here to generate an answer..."></textarea>
+            
+            <button onclick="generateAnswer()">Generate Answer</button>
+            <button class="secondary" onclick="copyToClipboard('answer-result')" id="copy-answer-btn" disabled>Copy Answer</button>
+            <button class="tertiary" onclick="downloadAsPDF('answer-result', 'Generated_Answer')" id="download-answer-btn" disabled>Download as PDF</button>
+            
+            <div class="loading" id="loading-answers">
+                <div class="spinner"></div>
+                <p>Generating your answer...</p>
+            </div>
+            
+            <h2>Generated Answer:</h2>
+            <div id="answer-result">Your generated answer will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Activate selected tab button
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Question Generation
+        async function generateQuestion() {
+            const userInput = document.getElementById('user_input').value;
+            const resultDiv = document.getElementById('result');
+            const loadingDiv = document.getElementById('loading-questions');
+            const copyBtn = document.getElementById('copy-question-btn');
+            const downloadBtn = document.getElementById('download-question-btn');
+            
+            if (!userInput.trim()) {
+                resultDiv.innerText = "Please enter some text to generate questions.";
+                resultDiv.classList.add('error');
+                return;
+            }
+            
+            // Show loading state
+            loadingDiv.style.display = 'block';
+            resultDiv.innerText = '';
+            resultDiv.classList.remove('error');
+            copyBtn.disabled = true;
+            downloadBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/generate/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `user_input=${encodeURIComponent(userInput)}`
+                });
+                
+                const data = await response.json();
+                
+                if (data.question) {
+                    resultDiv.innerText = data.question;
+                    resultDiv.classList.remove('error');
+                    copyBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                } else {
+                    resultDiv.innerText = 'Error: ' + (data.error || 'Unknown error occurred');
+                    resultDiv.classList.add('error');
+                }
+            } catch (error) {
+                resultDiv.innerText = 'Error: ' + error.message;
+                resultDiv.classList.add('error');
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+        
+        // Answer Generation
+        async function generateAnswer() {
+            const answerInput = document.getElementById('answer_input').value;
+            const answerResultDiv = document.getElementById('answer-result');
+            const loadingDiv = document.getElementById('loading-answers');
+            const copyBtn = document.getElementById('copy-answer-btn');
+            const downloadBtn = document.getElementById('download-answer-btn');
+            
+            if (!answerInput.trim()) {
+                answerResultDiv.innerText = "Please enter a question to generate an answer.";
+                answerResultDiv.classList.add('error');
+                return;
+            }
+            
+            // Show loading state
+            loadingDiv.style.display = 'block';
+            answerResultDiv.innerText = '';
+            answerResultDiv.classList.remove('error');
+            copyBtn.disabled = true;
+            downloadBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/generate_answer/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `question=${encodeURIComponent(answerInput)}`
+                });
+                
+                const data = await response.json();
+                
+                if (data.answer) {
+                    answerResultDiv.innerText = data.answer;
+                    answerResultDiv.classList.remove('error');
+                    copyBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                } else {
+                    answerResultDiv.innerText = 'Error: ' + (data.error || 'Unknown error occurred');
+                    answerResultDiv.classList.add('error');
+                }
+            } catch (error) {
+                answerResultDiv.innerText = 'Error: ' + error.message;
+                answerResultDiv.classList.add('error');
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+        
+        // Download as PDF
+        function downloadAsPDF(elementId, filename) {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById(elementId);
+            const text = element.innerText;
+            
+            const pdf = new jsPDF();
+            pdf.text(text, 10, 10);
+            pdf.save(`${filename}.pdf`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Smart Study System Account</title>
+    <meta http-equiv="refresh" content="{{ redirect_delay }};url={{ redirect_url }}" />
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(145deg, #e3f2fd 0%, #bbdefb 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 48px;
+            text-align: center;
+            max-width: 600px;
+            width: 95%;
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, #007bff, #00c4b4);
+        }
+
+        .logo {
+            margin-bottom: 28px;
+            max-width: 220px;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.08);
+            opacity: 0.95;
+        }
+
+        h2 {
+            color: #007bff;
+            margin: 0 0 24px;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #374151;
+            margin: 0 0 18px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #e6f0ff, #d1e3ff);
+            border-radius: 50%;
+            margin: 0 auto 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: bounce 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: #007bff;
+        }
+
+        .redirect-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #007bff, #0062cc);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 700;
+            margin-top: 28px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .redirect-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .timer {
+            font-size: 15px;
+            color: #6b7280;
+            margin-top: 24px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .timer span {
+            font-weight: 700;
+            color: #007bff;
+        }
+
+        .footer {
+            margin-top: 36px;
+            font-size: 14px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Replace with your actual logo URL -->
+        <img src="/api/placeholder/220/60" alt="Smart Study System Logo" class="logo">
+
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path>
+            </svg>
+        </div>
+
+        <h2>Welcome, {{ display_name }}!</h2>
+        <p>Your Smart Study System account is now active and ready to go!</p>
+        <p>Explore a world of learning with access to all our powerful tools and features designed to help you succeed.</p>
+
+        <a href="{{ redirect_url }}" class="redirect-link">Start Learning Now</a>
+
+        <p class="timer">Redirecting in <span id="countdown">{{ redirect_delay }}</span> seconds...</p>
+
+        <div class="footer">
+            Questions? Reach out at <a href="mailto:support@smartstudysystem.com">support@smartstudysystem.com</a><br>
+            © 2025 Smart Study System. All rights reserved.
+        </div>
+    </div>
+
+    <!-- <script>
+        // Countdown timer
+        let seconds = {{ redirect_delay }};
+        const countdownElement = document.getElementById('countdown');
+
+        const countdownTimer = setInterval(function() {
+            seconds--;
+            countdownElement.textContent = seconds;
+
+            if (seconds <= 0) {
+                clearInterval(countdownTimer);
+            }
+        }, 1000);
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - SSAAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-5xl flex flex-col md:flex-row">
+    <!-- Left Side: Form Section -->
+    <div class="w-full md:w-1/2">
+      <!-- Logo Header Section -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-center">
+        <div class="flex items-center justify-center space-x-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          <h1 class="text-2xl font-bold text-white">SSAAI</h1>
+        </div>
+        <p class="mt-2 text-blue-100">Smart Study Assistant with AI</p>
+      </div>
+
+      <!-- Form Section -->
+      <div class="p-8">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Create Your Account</h2>
+        <form method="POST" class="space-y-5">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <!-- Username Field -->
+          <div>
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ form.username.label }}
+            </label>
+            <div class="relative">
+              {{ form.username }}
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-user text-gray-400"></i>
+              </div>
+            </div>
+            {{ form.username.errors }}
+          </div>
+          <div>
+            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ form.phone.label }}
+            </label>
+            <div class="relative">
+              {{ form.phone }}
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-phone text-gray-400"></i>  <!-- Phone icon -->
+              </div>
+            </div>
+            {{ form.phone.errors }}
+          </div>
+          
+          <!-- Email Field -->
+          <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ form.email.label }}
+            </label>
+            <div class="relative">
+              {{ form.email }}
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-envelope text-gray-400"></i>
+              </div>
+            </div>
+            {{ form.email.errors }}
+          </div>
+
+          <!-- Password1 Field -->
+          <div>
+            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ form.password1.label }}
+            </label>
+            <div class="relative">
+              {{ form.password1 }}
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="togglePassword('id_password1')">
+                <i class="far fa-eye text-gray-400 hover:text-blue-600 cursor-pointer" id="togglePassword1"></i>
+              </button>
+            </div>
+            <div class="mt-1">
+              <div class="w-full bg-gray-200 rounded-full h-1.5">
+                <div id="password-strength-bar" class="bg-red-500 h-1.5 rounded-full" style="width: 0%"></div>
+              </div>
+              <p id="password-strength-text" class="text-xs text-gray-500 mt-1">Password strength: <span id="strength-text">Weak</span></p>
+            </div>
+            {{ form.password1.errors }}
+          </div>
+
+          <!-- Password2 Field -->
+          <div>
+            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ form.password2.label }}
+            </label>
+            <div class="relative">
+              {{ form.password2 }}
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="togglePassword('id_password2')">
+                <i class="far fa-eye text-gray-400 hover:text-blue-600 cursor-pointer" id="togglePassword2"></i>
+              </button>
+            </div>
+            {{ form.password2.errors }}
+          </div>
+
+          <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300 font-medium shadow-md">
+            Register
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-blue-600 font-medium hover:underline">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Photo Section -->
+    <div class="w-full md:w-1/2 bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center p-8">
+      <div class="max-w-md">
+        <!-- Image Container -->
+        <div class="rounded-xl overflow-hidden shadow-lg mb-6 bg-white p-2">
+          {% load static %}
+          <img src="{% static 'images/smartstudy.jpg' %}" alt="Students using SSAAI" class="rounded-lg w-full h-auto">
+          
+        </div>
+        
+        <!-- Description -->
+        <div class="text-center">
+          <h3 class="text-2xl font-bold text-blue-800 mb-4">Smarter Way to Learn</h3>
+          <p class="text-blue-700 mb-4">Join thousands of students who have transformed their learning experience with our AI-powered study assistant.</p>
+          
+          <!-- Feature Points -->
+          <div class="grid grid-cols-1 gap-4 mt-6">
+            <div class="flex items-center space-x-3 bg-white p-3 rounded-lg shadow-sm">
+              <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full">
+                <i class="fas fa-brain text-blue-600"></i>
+              </div>
+              <div class="text-left">
+                <p class="font-medium text-gray-800">Personalized Learning Paths</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3 bg-white p-3 rounded-lg shadow-sm">
+              <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full">
+                <i class="fas fa-chart-line text-blue-600"></i>
+              </div>
+              <div class="text-left">
+                <p class="font-medium text-gray-800">Track Your Progress</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3 bg-white p-3 rounded-lg shadow-sm">
+              <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full">
+                <i class="fas fa-users text-blue-600"></i>
+              </div>
+              <div class="text-left">
+                <p class="font-medium text-gray-800">Collaborative Study Groups</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      const toggleIcon = fieldId === 'id_password1' ? 
+        document.getElementById('togglePassword1') : 
+        document.getElementById('togglePassword2');
+      
+      if (field.type === 'password') {
+        field.type = 'text';
+        toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        field.type = 'password';
+        toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    // Password strength indicator
+    document.getElementById('id_password1').addEventListener('input', function(e) {
+      const strengthBar = document.getElementById('password-strength-bar');
+      const strengthText = document.getElementById('strength-text');
+      const password = e.target.value;
+      
+      // Calculate strength
+      let strength = 0;
+      if (password.length > 0) strength += 1;
+      if (password.length >= 8) strength += 1;
+      if (/[A-Z]/.test(password)) strength += 1;
+      if (/[0-9]/.test(password)) strength += 1;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+      
+      // Update UI
+      let width = 0;
+      let color = 'bg-red-500';
+      let text = 'Weak';
+      
+      if (strength <= 1) {
+        width = 25;
+        color = 'bg-red-500';
+        text = 'Weak';
+      } else if (strength <= 3) {
+        width = 50;
+        color = 'bg-yellow-500';
+        text = 'Medium';
+      } else if (strength <= 4) {
+        width = 75;
+        color = 'bg-blue-500';
+        text = 'Strong';
+      } else {
+        width = 100;
+        color = 'bg-green-500';
+        text = 'Very Strong';
+      }
+      
+      strengthBar.style.width = width + '%';
+      strengthBar.className = `${color} h-1.5 rounded-full`;
+      strengthText.textContent = text;
+    });
+  </script>
+
+  <style>
+    /* Style form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.375rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Style error messages */
+    .errorlist {
+      color: #ef4444;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    /* Style non-field errors */
+    .nonfield-errors {
+      background-color: #fee2e2;
+      border-left: 4px solid #ef4444;
+      color: #b91c1c;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.25rem;
+    }
+  </style>
+</body>
+</html>

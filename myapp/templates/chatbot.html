@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Bot Simulator</title>
+</head>
+<body>
+  <h2>Simulate WhatsApp Message</h2>
+  <form id="whatsapp-form">
+    <input type="text" id="whatsapp_input" placeholder="Type your message (e.g., 1)" required>
+    <button type="submit">Send</button>
+  </form>
+  <p><strong>Bot:</strong> <span id="whatsapp-response"></span></p>
+
+  <script>
+    document.getElementById("whatsapp-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const input = document.getElementById("whatsapp_input").value;
+
+      fetch("/simulate-whatsapp/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("whatsapp-response").innerText = data.reply;
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("whatsapp-response").innerText = "Something went wrong.";
+      });
+    });
+  </script>
+</body>
+</html>

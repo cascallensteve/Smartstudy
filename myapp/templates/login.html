@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Smart Study System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Custom gradient for AI-inspired background */
+        body {
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md animate-slide-up relative overflow-hidden">
+        <!-- Decorative top border -->
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+
+        <!-- Logo -->
+        <img src="/api/placeholder/220/60" alt="Smart Study System Logo" class="mx-auto mb-6 w-56 hover:scale-105 transition-transform duration-300">
+
+        <!-- Dynamic Welcome Message -->
+        <h2 class="text-3xl font-bold text-blue-600 text-center mb-6" id="welcome-message">Welcome Back</h2>
+
+        <!-- Error Message -->
+        {% if error %}
+            <p class="text-red-500 text-sm mb-4 text-center">{{ error }}</p>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            <div>
+                <input type="text" name="identifier" placeholder="Email or Phone Number" required
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200">
+            </div>
+            <div>
+                <input type="password" name="password" placeholder="Password" required
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200">
+            </div>
+            <button type="submit"
+                    class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 hover:shadow-lg transition-all duration-300 animate-pulse">
+                Login
+            </button>
+        </form>
+
+        <!-- Forgot Password -->
+        <div class="mt-4 text-center">
+            <a href="" class="text-blue-500 hover:text-blue-700 font-medium text-sm transition-colors duration-200">Forgot Password?</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-6 text-center text-gray-600 text-sm border-t pt-4">
+            <p>Don't have an account? <a href="{% url 'register' %}" class="text-blue-500 hover:text-blue-700 font-medium transition-colors duration-200">Register</a></p>
+            <p class="mt-2">Need help? Contact <a href="mailto:support@smartstudysystem.com" class="text-blue5-500 hover:text-blue-700">support@smartstudysystem.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic welcome message based on time of day
+        function updateWelcomeMessage() {
+            const now = new Date();
+            const hours = now.getHours();
+            let greeting;
+
+            if (hours < 12) {
+                greeting = "Good Morning";
+            } else if (hours < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+
+            document.getElementById('welcome-message').textContent = `${greeting}, Welcome Back!`;
+        }
+
+        // Run on page load
+        updateWelcomeMessage();
+    </script>
+</body>
+</html>

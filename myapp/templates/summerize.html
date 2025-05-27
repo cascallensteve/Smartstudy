@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Summarizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --neutral-800: #1f2937;
+            --neutral-700: #374151;
+            --neutral-500: #6b7280;
+            --neutral-300: #d1d5db;
+            --neutral-200: #e5e7eb;
+            --neutral-100: #f3f4f6;
+            --neutral-50: #f9fafb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-800);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--neutral-800);
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--neutral-700);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            color: var(--primary);
+        }
+
+        .input-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--neutral-700);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--neutral-300);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: var(--neutral-50);
+            resize: vertical;
+            transition: all 0.3s ease;
+            min-height: 150px;
+        }
+
+        select {
+            min-height: auto;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 20px;
+            padding-right: 44px;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .primary-button {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .primary-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
+        }
+
+        .secondary-button {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .secondary-button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .options-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .options-group {
+            flex: 1;
+        }
+
+        .summary-section {
+            position: relative;
+        }
+
+        .summary-content {
+            background-color: var(--primary-light);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .action-button {
+            background-color: white;
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-button:hover {
+            background-color: var(--neutral-100);
+            border-color: var(--neutral-500);
+            color: var(--neutral-800);
+        }
+
+        .action-button i {
+            font-size: 16px;
+        }
+
+        .history-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            padding: 18px;
+            border-bottom: 1px solid var(--neutral-200);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .history-item:hover {
+            background-color: var(--neutral-50);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--neutral-800);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .history-preview {
+            color: var(--neutral-500);
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .history-meta {
+            color: var(--neutral-500);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .history-action {
+            color: var(--neutral-500);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-action:hover {
+            color: var(--primary);
+        }
+
+        .delete-action:hover {
+            color: var(--danger);
+        }
+
+        .badge {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--neutral-500);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--neutral-300);
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .options-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                position: static;
+                margin-top: 15px;
+                justify-content: flex-end;
+            }
+        }
+
+        /* Toast notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--neutral-800);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fade-in 0.3s, fade-out 0.3s 2.7s;
+        }
+
+        @keyframes fade-in {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-out {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-file-lines"></i>
+                <h1>Note Summarizer</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-pen-to-square"></i> Create Summary</h2>
+            <form method="post" class="input-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_notes">Your Notes</label>
+                    {{ form.notes }}
+                </div>
+                
+                <div class="options-row">
+                    <div class="options-group">
+                        <label for="id_length">Summary Length</label>
+                        <select id="id_length" name="length">
+                            <option value="short">Short - Key points only</option>
+                            <option value="medium" selected>Medium - Balanced summary</option>
+                            <option value="long">Long - Detailed overview</option>
+                        </select>
+                    </div>
+                    
+                    <div class="options-group">
+                        <label for="id_style">Style</label>
+                        <select id="id_style" name="style">
+                            <option value="bullet">Bullet Points</option>
+                            <option value="paragraph" selected>Paragraphs</option>
+                            <option value="outline">Outline Format</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="primary-button">
+                        <i class="fas fa-magic"></i> Generate Summary
+                    </button>
+                    <button type="reset" class="secondary-button">
+                        <i class="fas fa-undo"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if summary %}
+        <div class="card summary-section" id="summary-card">
+            <h2><i class="fas fa-file-alt"></i> Your Summary</h2>
+            
+            <div class="action-buttons">
+                <button class="action-button" id="copy-btn" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+                <button class="action-button" id="save-btn" onclick="saveToHistory()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="action-button" id="pdf-btn" onclick="generatePDF()">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </button>
+            </div>
+            
+            <div class="summary-content" id="summary-content">
+                {{ summary|linebreaks }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <h2><i class="fas fa-history"></i> Summary History</h2>
+            
+            <div id="history-container">
+                <!-- History items will be populated here -->
+                <div id="empty-history" class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No saved summaries yet</p>
+                </div>
+                
+                <ul class="history-list" id="history-list" style="display: none;">
+                    <!-- Sample history item (will be generated by JS) -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // Function to copy summary to clipboard
+        function copyToClipboard() {
+            const summaryText = document.getElementById('summary-content').innerText;
+            navigator.clipboard.writeText(summaryText).then(() => {
+                showToast("Copied to clipboard!");
+            });
+        }
+        
+        // Function to save summary to history
+        function saveToHistory() {
+            const summaryText = document.getElementById('summary-content').innerText;
+            const timestamp = new Date().toISOString();
+            const title = summaryText.split('\n')[0] || 'Untitled Summary';
+            
+            // Create summary object
+            const summary = {
+                id: generateUniqueId(),
+                title: title,
+                content: summaryText,
+                timestamp: timestamp,
+                style: document.getElementById('id_style').value,
+                length: document.getElementById('id_length').value
+            };
+            
+            // Get existing history from localStorage or initialize empty array
+            let history = JSON.parse(localStorage.getItem('summaryHistory')) || [];
+            
+            // Add new summary at the beginning
+            history.unshift(summary);
+            
+            // Save updated history to localStorage
+            localStorage.setItem('summaryHistory', JSON.stringify(history));
+            
+            // Refresh history display
+            displayHistory();
+            
+            showToast("Summary saved to history!");
+        }
+        
+        // Function to generate PDF
+        function generatePDF() {
+            const summaryContent = document.getElementById('summary-content');
+            const doc = new jsPDF();
+            
+            // Set title
+            doc.setFontSize(18);
+            doc.text('Note Summary', 20, 20);
+            
+            doc.setFontSize(12);
+            doc.text('Generated on: ' + new Date().toLocaleString(), 20, 30);
+            
+            // Add content - split into lines to fit the page
+            doc.setFontSize(12);
+            const text = summaryContent.innerText;
+            const splitText = doc.splitTextToSize(text, 170);
+            doc.text(splitText, 20, 40);
+
+            // Save PDF
+            doc.save('summary.pdf');
+            
+            showToast("PDF generated!");
+        }
+        
+        // Function to delete summary from history
+        function deleteSummary(id) {
+            if (confirm('Are you sure you want to delete this summary?')) {
+                // Get existing history
+                let history = JSON.parse(localStorage.getItem('summaryHistory')) || [];
+                
+                // Filter out the item to delete
+                history = history.filter(item => item.id !== id);
+                
+                // Save updated history
+                localStorage.setItem('summaryHistory', JSON.stringify(history));
+                
+                // Refresh display
+                displayHistory();
+                
+                showToast("Summary deleted!");
+            }
+        }
+        
+        // Function to load a summary from history
+        function loadSummary(id) {
+            const history = JSON.parse(localStorage.getItem('summaryHistory')) || [];
+            const summary = history.find(item => item.id === id);
+            
+            if (summary) {
+                // Create a temporary summary display if not exists
+                let summaryCard = document.getElementById('summary-card');
+                if (!summaryCard) {
+                    const container = document.querySelector('.container');
+                    summaryCard = document.createElement('div');
+                    summaryCard.id = 'summary-card';
+                    summaryCard.className = 'card summary-section';
+                    
+                    summaryCard.innerHTML = `
+                        <h2><i class="fas fa-file-alt"></i> Your Summary</h2>
+                        
+                        <div class="action-buttons">
+                            <button class="action-button" id="copy-btn" onclick="copyToClipboard()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="action-button" id="save-btn" onclick="saveToHistory()">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <button class="action-button" id="pdf-btn" onclick="generatePDF()">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </button>
+                        </div>
+                        
+                        <div class="summary-content" id="summary-content"></div>
+                    `;
+                    
+                    // Insert after the first card
+                    container.insertBefore(summaryCard, container.children[1].nextSibling);
+                }
+                
+                // Set the content
+                const contentDiv = document.getElementById('summary-content');
+                contentDiv.innerText = summary.content;
+                
+                // Scroll to the summary
+                summaryCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Function to generate unique ID
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Function to display history
+        function displayHistory() {
+            const history = JSON.parse(localStorage.getItem('summaryHistory')) || [];
+            const historyList = document.getElementById('history-list');
+            const emptyState = document.getElementById('empty-history');
+            
+            if (history.length === 0) {
+                historyList.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            historyList.style.display = 'block';
+            emptyState.style.display = 'none';
+            
+            // Clear existing items
+            historyList.innerHTML = '';
+            
+            // Add history items
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                li.innerHTML = `
+                    <div class="history-content" onclick="loadSummary('${item.id}')">
+                        <div class="history-title">${item.title}</div>
+                        <div class="history-preview">${item.content.substring(0, 120)}...</div>
+                        <div class="history-meta">
+                            <span><i class="far fa-clock"></i> ${formatDate(item.timestamp)}</span>
+                            <span class="badge">${item.length} summary</span>
+                        </div>
+                    </div>
+                    <div class="history-actions">
+                        <span class="history-action" onclick="loadSummary('${item.id}')"><i class="fas fa-eye"></i></span>
+                        <span class="history-action delete-action" onclick="event.stopPropagation(); deleteSummary('${item.id}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </span>
+                    </div>
+                `;
+                historyList.appendChild(li);
+            });
+        }
+        
+        // Function to show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(() => toast.className = "", 3000);
+        }
+        
+        // Display history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayHistory();
+            
+            // Add eventListeners for form fields to save to localStorage
+            const notesField = document.querySelector('textarea[name="notes"]');
+            if (notesField) {
+                // Load saved draft if exists
+                const savedDraft = localStorage.getItem('notesDraft');
+                if (savedDraft) {
+                    notesField.value = savedDraft;
+                }
+                
+                // Save draft while typing
+                notesField.addEventListener('input', function() {
+                    localStorage.setItem('notesDraft', this.value);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

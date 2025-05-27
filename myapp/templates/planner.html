@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Planner</title>
+</head>
+<body>
+    <h1>My Planner Tasks</h1>
+    <a href="{% url 'add_task' %}">Add New Task</a>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <strong>{{ task.title }}</strong> - {{ task.date }}<br>
+                {{ task.description }}<br>
+                <em>Status:</em> {% if task.completed %} ✅ Completed {% else %} ❌ Incomplete {% endif %}
+            </li>
+        {% empty %}
+            <li>No tasks yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

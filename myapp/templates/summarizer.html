@@ -1,0 +1,255 @@
+
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="summarizer-header">
+        <h2><i class="fas fa-robot"></i> AI Note Summarizer</h2>
+        <p class="subtitle">Transform your lengthy notes into concise summaries with AI</p>
+    </div>
+    
+    <form method="POST" class="summarizer-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="raw_text">Paste your notes here:</label>
+            <textarea name="raw_text" id="raw_text" rows="10" placeholder="Enter your lecture notes, meeting minutes, or any text you want to summarize...">{{ request.POST.raw_text }}</textarea>
+            <div class="char-counter"><span id="char_count">0</span> characters</div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-summarize">
+                <i class="fas fa-magic"></i> Summarize
+            </button>
+            <div class="loading-indicator" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <span>Processing your notes...</span>
+            </div>
+        </div>
+    </form>
+
+    {% if summary %}
+        <div class="summary-result">
+            <div class="summary-header">
+                <h3><i class="fas fa-file-alt"></i> Summary</h3>
+                <button class="btn-copy" onclick="copyToClipboard()" title="Copy to clipboard">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            <div class="summary-content">
+                <p>{{ summary }}</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+<style>
+    .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .summarizer-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .summarizer-header h2 {
+        color: #2c3e50;
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .summarizer-header .subtitle {
+        color: #7f8c8d;
+        font-size: 1rem;
+    }
+    
+    .summarizer-form {
+        margin-bottom: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .form-group textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        resize: vertical;
+        min-height: 200px;
+        transition: border 0.3s ease;
+    }
+    
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .char-counter {
+        text-align: right;
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-top: 0.3rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn-summarize {
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-summarize:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+    
+    .loading-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #7f8c8d;
+    }
+    
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(52, 152, 219, 0.2);
+        border-top-color: #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .summary-result {
+        margin-top: 2rem;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .summary-header {
+        background: linear-gradient(135deg, #f5f7fa, #e4e8eb);
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .summary-header h3 {
+        margin: 0;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-copy {
+        background: none;
+        border: none;
+        color: #7f8c8d;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: color 0.2s;
+    }
+    
+    .btn-copy:hover {
+        color: #3498db;
+    }
+    
+    .summary-content {
+        padding: 1.5rem;
+        background: white;
+        line-height: 1.6;
+    }
+    
+    .summary-content p {
+        margin: 0;
+        white-space: pre-wrap;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+            margin: 1rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('raw_text');
+        const charCount = document.getElementById('char_count');
+        const form = document.querySelector('.summarizer-form');
+        const loadingIndicator = document.getElementById('loading');
+        
+        // Character counter
+        textarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+        
+        // Initialize character count
+        if (textarea.value) {
+            charCount.textContent = textarea.value.length;
+        }
+        
+        // Form submission
+        form.addEventListener('submit', function() {
+            loadingIndicator.style.display = 'flex';
+            document.querySelector('.btn-summarize').disabled = true;
+        });
+    });
+    
+    function copyToClipboard() {
+        const summaryText = document.querySelector('.summary-content p').innerText;
+        navigator.clipboard.writeText(summaryText).then(() => {
+            const copyBtn = document.querySelector('.btn-copy');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            copyBtn.style.color = '#2ecc71';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+                copyBtn.style.color = '#7f8c8d';
+            }, 2000);
+        });
+    }
+</script>

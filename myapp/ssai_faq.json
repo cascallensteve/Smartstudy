@@ -1,0 +1,15 @@
+[
+    {
+      "question": "What is SSAAI?",
+      "answer": "SSAAI stands for Smart Study Assistant with AI. It's a learning platform powered by AI features like summarization, quiz generation, chatbot help, and smart study planning."
+    },
+    {
+      "question": "How do I generate a quiz?",
+      "answer": "To generate a quiz, go to the Quiz Generator, input your notes or topic, and let the system generate MCQs for you."
+    },
+    {
+      "question": "Can I ask the bot homework questions?",
+      "answer": "Yes. The Homework Chatbot lets you ask questions on any topic, and it uses AI to generate intelligent, relevant responses."
+    }
+  ]
+  
