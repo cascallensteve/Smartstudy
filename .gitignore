@@ -1,0 +1,61 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+media
+
+# Pytest cache
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# VS Code settings
+.vscode/
+
+# Ignore environment variables file
+.env
+
+# Ignore secret config files
+*.key
+*.pem
+*.secret
+
+# Ignore Python egg info
+*.egg-info/
+.eggs/
+
+# Ignore IDE/editor files
+.idea/
+*.swp
+*~
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore secret files you mentioned
+myapp/openai_summary.py
+myapp/__pycache__/openai_summary.cpython-313.pyc
+
+# Ignore Hugging Face tokens or other secret tokens in views.py (if stored in a separate file, ignore that file)
+# If tokens are inside views.py, you must remove them from the code or move to a separate config file and ignore that file
