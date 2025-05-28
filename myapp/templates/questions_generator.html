@@ -1,0 +1,20 @@
+{% block content %}
+  <div style="max-width: 600px; margin: auto; font-family: Arial, sans-serif;">
+    <h2 style="color: #333;">Generate Study Questions</h2>
+
+    <form method="post" style="margin-bottom: 20px;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" style="padding: 10px 20px; background: green; color: white; border: none; cursor: pointer;">
+        Generate Questions
+      </button>
+    </form>
+
+    {% if questions %}
+      <div style="background: #f0f0f0; padding: 15px; border: 1px solid #ccc;">
+        <h3>Generated Questions:</h3>
+        <pre>{{ questions }}</pre>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

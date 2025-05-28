@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from rest_framework.routers import DefaultRouter
 # from .views import PlannerTaskViewSet, planner_home, add_task
-from .views import PlannerTaskViewSet, planner_home, add_task
+from .views import PlannerTaskViewSet, planner_home, add_task, question_generator_view
 
 from .views import note_summarizer, summarize_view, verify_otp_view
 urlpatterns = [
@@ -16,7 +16,7 @@ urlpatterns = [
     path('summarize/', note_summarizer, name='note_summarizer'),
     path('verify-otp/', verify_otp_view, name='verify_otp'),
     path('summarizes/', summarize_view, name='summarizes'),
-    path('generate-question/', views.generate_question, name='generate_question'),
+    path('generate_questions/', question_generator_view, name='generate_questions'),
     path('generate/', views.generate_question, name='generate'),
     path('index', views.index, name='index'),
     path('planner', views.planner, name='planner'),

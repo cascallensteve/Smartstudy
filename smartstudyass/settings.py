@@ -161,3 +161,5 @@ TWILIO_AUTH_TOKEN = 'your_auth_token'
 TWILIO_PHONE_NUMBER = '+1234567890'
 
 # AUTH_USER_MODEL = 'myapp.CustomUser'
+GEMINI_API_KEY = "AIzaSyBsvs7VIkdlZqNxou2EP09GK-pljH1Tklg"
+# gemini api key 

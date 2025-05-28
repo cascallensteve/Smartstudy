@@ -107,3 +107,8 @@ class PlannerTaskForm(forms.ModelForm):
                 'class': 'form-checkbox'
             }),
         }
+
+
+
+class NotesForm(forms.Form):
+    notes = forms.CharField(widget=forms.Textarea(attrs={'rows':6, 'cols':60}), label="Enter your notes")  #class notes 
